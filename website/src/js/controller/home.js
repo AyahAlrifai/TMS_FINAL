@@ -216,53 +216,48 @@ const startEndChat=()=>{
 }
 
 window.addEventListener("load",() => {
-  if(localStorage.getItem("id")!="null") {
-    var audio = new Audio("img/beyond-doubt-2.ogg");
-    audio.muted =false;
-    getTransactions({});
-    getBalance({});
-    getIncomeCategories();
-    getExpenseCategories();
-    setTransactionType();
-    audio.play();
-    document.getElementById("add_transaction_button").addEventListener("click",(event)=>{
-      addTransaction();
-    });
-    setCategoryType();
-    document.getElementById("add_category_button").addEventListener("click",(event)=>{
-    addCategory();
-    });
-    document.getElementById("transaction_filter").addEventListener("click",filterTransactions);
-    document.getElementById("chat").addEventListener("click",startEndChat);
-    document.getElementById("send_mesg").addEventListener("keyup",async (event) => {
-      const monthNames = ["January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"];
-        let dateObj = new Date();
-        var hour=dateObj.getHours()	+ 8;
-        var minutes=dateObj.getMinutes()
-        let month = monthNames[dateObj.getMonth()];
-        let day = String(dateObj.getDate()).padStart(2, '0');
-        let year = dateObj.getFullYear();
-        let date = hour+":"+minutes+"  "+month  + '\n'+ day  + ',' + year;
-      if (event.keyCode === 13) {
-        if(!event.shiftKey) {
-          var mesg=TmsView.addUserMessage(date);
-          if(mesg) {
-            document.getElementById("send_mesg").disabled=true;
-            await TmsView.addBotMessage(await ChatBot.sendMessage(mesg),date);
-            audio.play();
-            audio.muted = false;
-            document.getElementById("send_mesg").disabled=false;
-          }
+  var audio = new Audio("img/beyond-doubt-2.ogg");
+  audio.muted =false;
+  getTransactions({});
+  getBalance({});
+  getIncomeCategories();
+  getExpenseCategories();
+  setTransactionType();
+  audio.play();
+  document.getElementById("add_transaction_button").addEventListener("click",(event)=>{
+    addTransaction();
+  });
+  setCategoryType();
+  document.getElementById("add_category_button").addEventListener("click",(event)=>{
+  addCategory();
+  });
+  document.getElementById("transaction_filter").addEventListener("click",filterTransactions);
+  document.getElementById("chat").addEventListener("click",startEndChat);
+  document.getElementById("send_mesg").addEventListener("keyup",async (event) => {
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"];
+      let dateObj = new Date();
+      var hour=dateObj.getHours()	+ 8;
+      var minutes=dateObj.getMinutes()
+      let month = monthNames[dateObj.getMonth()];
+      let day = String(dateObj.getDate()).padStart(2, '0');
+      let year = dateObj.getFullYear();
+      let date = hour+":"+minutes+"  "+month  + '\n'+ day  + ',' + year;
+    if (event.keyCode === 13) {
+      if(!event.shiftKey) {
+        var mesg=TmsView.addUserMessage(date);
+        if(mesg) {
+          document.getElementById("send_mesg").disabled=true;
+          await TmsView.addBotMessage(await ChatBot.sendMessage(mesg),date);
+          audio.play();
+          audio.muted = false;
+          document.getElementById("send_mesg").disabled=false;
         }
       }
-    });
-    document.getElementById("logout").addEventListener("click",()=>{
-      localStorage.setItem("id",null);
-      window.open(`http://localhost:8081`,"_self");
-    })
-  } else {
-    localStorage.setItem("id",user.id);
-    window.open(`http://localhost:8081/home`,"_self");
-  }
+    }
+  });
+  document.getElementById("logout").addEventListener("click",()=>{
+    localStorage.setItem("id",null);
+    window.open(`http://localhost:8081`,"_self");
+  })
 });

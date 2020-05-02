@@ -39,6 +39,11 @@ module.exports = {
             filename: 'home/profile/index.html',
             template: './src/html/profile.html',
             chunks:['profile']
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'error/index.html',
+            template: './src/html/error.html',
+            chunks:[]
         })
     ],
     module: {

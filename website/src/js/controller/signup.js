@@ -3,9 +3,6 @@ import * as TmsView from "../views/TmsView";
 import * as ChatBot from "../models/ChatBot";
 
 const services=new TmsServices();
-if(localStorage.getItem("id")!="null") {
-  window.open(`http://localhost:8081/home`,"_self");
-}
 window.addEventListener("load",()=>{
   document.getElementById("signup_button").addEventListener("click",async ()=>{
     var signupData=await TmsView.readSignupData();
