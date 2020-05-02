@@ -1,0 +1,11 @@
+TMS2
+tmsadmin2
+123412345
+localhost
+3306
+fasqcmssfzx7zpvf
+rwi7p2pj7pr7nnqh
+o80z4j4npi1ltjao	
+i2cpbxbi4neiupid.cbetxkdyhwsb.us-east-1.rds.amazonaws.com	
+3306
+
