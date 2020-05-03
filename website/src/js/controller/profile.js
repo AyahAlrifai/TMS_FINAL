@@ -7,6 +7,10 @@ window.addEventListener("load",()=>{
   TmsView.addProfileInfo();
   document.getElementById("logout").addEventListener("click",()=>{
     localStorage.setItem("id",null);
+    localStorage.setItem("name",null);
+    localStorage.setItem("email",null);
+    localStorage.setItem("password",null);
+    localStorage.setItem("photo",null);
     window.open(`http://localhost:8081`,"_self");
   });
   document.getElementById("profile_button").addEventListener("click",()=> {
@@ -31,6 +35,9 @@ window.addEventListener("load",()=>{
           localStorage.setItem("email",user["email"])
           localStorage.setItem("name",user["name"])
           localStorage.setItem("photo",user["photo"])
+          localStorage.setItem("new_name",null);
+          localStorage.setItem("new_email",null);
+          localStorage.setItem("new_photo",null);
           window.open(`http://localhost:8081/home/profile`,"_self");
         } else {
           TmsView.errorMessage("email_profile_error","Email is already taken")

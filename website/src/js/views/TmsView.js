@@ -559,8 +559,8 @@ export const readSignupData=async ()=>{
   var photo=document.getElementById("signup_photo");
   var photoContents;
   if(photo.files[0]){
-    if(photo.files[0].size>65535) {
-      errorMessage("signup_error","image size must be less than 64 KB");
+    if(photo.files[0].size>16777215) {
+      errorMessage("signup_error","image size must be less than 15 MB");
       return null;
     }
     photoContents = await readUploadedFileAsDataURL(photo.files[0]);
@@ -661,8 +661,8 @@ export const changeProfilePhoto=async ()=>{
   var photo=document.getElementById("file-input");
   var photoContents;
   if(photo.files[0]){
-    if(photo.files[0].size>65535) {
-      errorMessage("image_profile_error","image size must be less than 64 KB");
+    if(photo.files[0].size>16777215) {
+      errorMessage("image_profile_error","image size must be less than 15 MB");
       return null;
     } else {
       photoContents = await readUploadedFileAsDataURL(photo.files[0]);
@@ -675,20 +675,20 @@ export const changeProfilePhoto=async ()=>{
 export const changeProfileUserName=()=> {
   errorMessage("username_profile_error","");
   var name=document.getElementById("profile_username").value;
-  if(name==""){
-    errorMessage("username_profile_error","please fill in User name field");
-  } else {
+  if(name){
     localStorage.setItem("new_name",name);
+  } else {
+    errorMessage("username_profile_error","please fill in User name field");
   }
 }
 
 export const changeProfileEmail=()=>{
   errorMessage("email_profile_error","");
   var email=document.getElementById("profile_email").value;
-  if(email=="") {
-    errorMessage("email_profile_error","please fill in Email field");
-  } else {
+  if(email) {
     localStorage.setItem("new_email",email);
+  } else {
+    errorMessage("email_profile_error","please fill in Email field");
   }
 }
 
@@ -702,12 +702,13 @@ export const endUpdateProfileInfo=()=>{
       var photo=localStorage.getItem("photo");
       var name=localStorage.getItem("name");
       var email=localStorage.getItem("email");
-      var user={};
-      user["photo"]=new_photo?new_photo:photo;
-      user["name"]=new_name?new_name:name;
-      user["email"]=new_email?new_email:email;
-      user["id"]=localStorage.getItem("id");
-      user["password"]=pass;
+      var user={
+        "id":localStorage.getItem("id"),
+        "name":new_name==null?name:new_name,
+        "email":new_email==null?email:new_email,
+        "password":pass,
+        "photo":new_photo==null?photo:new_photo
+      };
       return user;
     } else if(pass==""){
       errorMessage("password_profile_error","please fill in password field");

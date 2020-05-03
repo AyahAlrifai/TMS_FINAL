@@ -693,9 +693,7 @@ public class TMSServiceDatabaseImpl implements TMSService {
 		this.pstmt.setInt(2,user.getId());
 		this.result=this.pstmt.executeQuery();
 		result.next();
-		System.out.println(result.isLast() +"..."+ result.isFirst());
 		if(result.isLast() && result.isFirst()) {
-			System.out.println("one email");
 			sqlStatment="update "+R.Table.user+" set "+R.Attribute.name+"=?,"+R.Attribute.email+"=?,"+R.Attribute.photo+"=?,"+R.Attribute.password+"=? where "+R.Attribute.id+"=?";
 			this.pstmt = this.connection.prepareStatement(sqlStatment);
 			this.pstmt.setString(1,user.getName());
@@ -709,17 +707,14 @@ public class TMSServiceDatabaseImpl implements TMSService {
 			this.pstmt.setString(1, user.getEmail());
 			this.result=this.pstmt.executeQuery();
 			if(result.next()) {
-				System.out.println("new data");
 				return new User(result.getInt("id"),result.getString("name"),result.getString("email")
 						,result.getString("password"),result.getBytes("photo"));
 			}
 		} else {
-			System.out.println("two email");
+			//exception
 		}
 
 		return null;
 	}
-	
-	
 
 }

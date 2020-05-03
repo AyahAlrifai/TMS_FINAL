@@ -258,6 +258,10 @@ window.addEventListener("load",() => {
   });
   document.getElementById("logout").addEventListener("click",()=>{
     localStorage.setItem("id",null);
+    localStorage.setItem("name",null);
+    localStorage.setItem("email",null);
+    localStorage.setItem("password",null);
+    localStorage.setItem("photo",null);
     window.open(`http://localhost:8081`,"_self");
   })
 });
