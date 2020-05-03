@@ -154,6 +154,7 @@ const deleteCategory=async (event) => {
     TmsView.renderExpenseCategories(services.expenseCategories);
   }
   addEventForDeleteCategory();
+  addEventForUpdateCategory();
 }
 
 const filterTransactions=(event) => {
