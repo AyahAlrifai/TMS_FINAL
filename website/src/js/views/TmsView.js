@@ -662,8 +662,8 @@ export const changeProfilePhoto=async ()=>{
   var photoContents;
   if(photo.files[0]){
     if(photo.files[0].size>16777215) {
+      localStorage.setItem("new_photo",localStorage.getItem("photo"));
       errorMessage("image_profile_error","image size must be less than 15 MB");
-      return null;
     } else {
       photoContents = await readUploadedFileAsDataURL(photo.files[0]);
       document.getElementById("profile_image").setAttribute("src",photoContents);
@@ -678,6 +678,7 @@ export const changeProfileUserName=()=> {
   if(name){
     localStorage.setItem("new_name",name);
   } else {
+    localStorage.setItem("new_name",localStorage.getItem("name"));
     errorMessage("username_profile_error","please fill in User name field");
   }
 }
@@ -688,6 +689,7 @@ export const changeProfileEmail=()=>{
   if(email) {
     localStorage.setItem("new_email",email);
   } else {
+    localStorage.setItem("new_email",localStorage.getItem("email"));
     errorMessage("email_profile_error","please fill in Email field");
   }
 }
@@ -699,15 +701,12 @@ export const endUpdateProfileInfo=()=>{
       var new_photo=localStorage.getItem("new_photo");
       var new_name=localStorage.getItem("new_name");
       var new_email=localStorage.getItem("new_email");
-      var photo=localStorage.getItem("photo");
-      var name=localStorage.getItem("name");
-      var email=localStorage.getItem("email");
       var user={
         "id":localStorage.getItem("id"),
-        "name":new_name==null?name:new_name,
-        "email":new_email==null?email:new_email,
+        "name":new_name,
+        "email":new_email,
         "password":pass,
-        "photo":new_photo==null?photo:new_photo
+        "photo":new_photo
       };
       return user;
     } else if(pass==""){

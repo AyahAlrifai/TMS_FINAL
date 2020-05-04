@@ -11,6 +11,9 @@ window.addEventListener("load",()=>{
     localStorage.setItem("email",null);
     localStorage.setItem("password",null);
     localStorage.setItem("photo",null);
+    localStorage.setItem("new_name",null);
+    localStorage.setItem("new_email",null);
+    localStorage.setItem("new_photo",null);
     window.open(`http://localhost:8081`,"_self");
   });
   document.getElementById("profile_button").addEventListener("click",()=> {
@@ -32,12 +35,9 @@ window.addEventListener("load",()=>{
       if(user) {
         var result=await services.updateUserInfo(user);
         if(result!="") {
-          localStorage.setItem("email",user["email"])
-          localStorage.setItem("name",user["name"])
-          localStorage.setItem("photo",user["photo"])
-          localStorage.setItem("new_name",null);
-          localStorage.setItem("new_email",null);
-          localStorage.setItem("new_photo",null);
+          localStorage.setItem("email",user["email"]);
+          localStorage.setItem("name",user["name"]);
+          localStorage.setItem("photo",user["photo"]);
           window.open(`http://localhost:8081/home/profile`,"_self");
         } else {
           TmsView.errorMessage("email_profile_error","Email is already taken")

@@ -263,6 +263,9 @@ window.addEventListener("load",() => {
     localStorage.setItem("email",null);
     localStorage.setItem("password",null);
     localStorage.setItem("photo",null);
+    localStorage.setItem("new_name",null);
+    localStorage.setItem("new_email",null);
+    localStorage.setItem("new_photo",null);
     window.open(`http://localhost:8081`,"_self");
   })
 });
