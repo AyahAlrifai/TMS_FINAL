@@ -644,7 +644,7 @@ export const startUpdateProfileInfo=()=>{
       <div class="error" id="email_profile_error"></div>
       <div class="form-group">
         <label for="profile_password">password:</label>
-        <input id="profile_password" type="password" class="form-control" placeholder="insert old password">
+        <input id="profile_password" type="password" class="form-control" placeholder="insert your password">
       </div>
       <div class="error" id="password_profile_error"></div>
       <button id="update_button" type="submit" class="btn login_button">update</button>
