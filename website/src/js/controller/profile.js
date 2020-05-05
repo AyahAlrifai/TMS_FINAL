@@ -4,6 +4,9 @@ import * as ChatBot from "../models/ChatBot";
 const services=new TmsServices();
 
 window.addEventListener("load",()=>{
+  localStorage.setItem("new_name",localStorage.getItem("name"));
+  localStorage.setItem("new_email",localStorage.getItem("email"));
+  localStorage.setItem("new_photo",localStorage.getItem("photo"));
   TmsView.addProfileInfo();
   document.getElementById("logout").addEventListener("click",()=>{
     localStorage.setItem("id",null);
