@@ -238,7 +238,7 @@ window.addEventListener("load",() => {
     const monthNames = ["January", "February", "March", "April", "May", "June",
           "July", "August", "September", "October", "November", "December"];
       let dateObj = new Date();
-      var hour=dateObj.getHours()	+ 8;
+      var hour=dateObj.getHours();
       var minutes=dateObj.getMinutes()
       let month = monthNames[dateObj.getMonth()];
       let day = String(dateObj.getDate()).padStart(2, '0');
