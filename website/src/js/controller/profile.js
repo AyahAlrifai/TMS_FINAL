@@ -1,13 +1,14 @@
 import TmsServices from "../models/TmsServices";
-import * as TmsView from "../views/TmsView";
-import * as ChatBot from "../models/ChatBot";
+import * as base from "../views/base";
+import * as updateProfile from "../views/updateProfile";
+
 const services=new TmsServices();
 
 window.addEventListener("load",()=>{
   localStorage.setItem("new_name",localStorage.getItem("name"));
   localStorage.setItem("new_email",localStorage.getItem("email"));
   localStorage.setItem("new_photo",localStorage.getItem("photo"));
-  TmsView.addProfileInfo();
+  updateProfile.addProfileInfo();
   document.getElementById("logout").addEventListener("click",()=>{
     localStorage.setItem("id",null);
     localStorage.setItem("name",null);
@@ -20,21 +21,21 @@ window.addEventListener("load",()=>{
     window.open(`http://localhost:8081`,"_self");
   });
   document.getElementById("profile_button").addEventListener("click",()=> {
-    var user=TmsView.startUpdateProfileInfo();
+    var user=updateProfile.startUpdateProfileInfo();
     document.getElementById("file-input").addEventListener("change",()=>{
-      TmsView.changeProfilePhoto();
+      updateProfile.changeProfilePhoto();
     })
     document.getElementById("profile_username").addEventListener("change",()=>{
-      TmsView.changeProfileUserName();
+      updateProfile.changeProfileUserName();
     })
     document.getElementById("profile_email").addEventListener("change",()=>{
-      TmsView.changeProfileEmail();
+      updateProfile.changeProfileEmail();
     })
     document.getElementById("close_button").addEventListener("click",()=>{
       window.open(`http://localhost:8081/home/profile`,"_self");
     })
     document.getElementById("update_button").addEventListener("click",async ()=>{
-      var user=TmsView.endUpdateProfileInfo();
+      var user=updateProfile.endUpdateProfileInfo();
       if(user) {
         var result=await services.updateUserInfo(user);
         if(result!="") {
@@ -43,7 +44,7 @@ window.addEventListener("load",()=>{
           localStorage.setItem("photo",user["photo"]);
           window.open(`http://localhost:8081/home/profile`,"_self");
         } else {
-          TmsView.errorMessage("email_profile_error","Email is already taken")
+          base.errorMessage("email_profile_error","Email is already taken")
         }
       }
     })

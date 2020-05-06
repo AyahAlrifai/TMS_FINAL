@@ -1,38 +1,45 @@
 import TmsServices from "../models/TmsServices";
-import * as TmsView from "../views/TmsView";
+import * as chatbot from "../views/chatbot";
 import * as ChatBot from "../models/ChatBot";
+import * as base from "../views/base";
+import * as render from "../views/render";
+import * as addTrans from "../views/addTransaction";
+import * as filterTrans from "../views/filterTransactions";
+import * as addCategories from "../views/addCategory";
+import * as updateCategories from "../views/updateCategory";
+import * as editFrequent from "../views/editFrequent";
 
 
 const services=new TmsServices();
 const getTransactions=async (filter) => {
   filter["user_id"]=localStorage.getItem("id")
-  TmsView.startLoading("transaction_body");
+  base.startLoading("transaction_body");
   await services.getTransactions(filter);
-  TmsView.endLoading("transaction_body");
-  TmsView.renderTransactions(services.transactions);
+  base.endLoading("transaction_body");
+  render.renderTransactions(services.transactions);
   addEventForEditFrequent();
 }
 
 const getBalance=async (filter) => {
   filter["user_id"]=localStorage.getItem("id")
   await services.getBalance(filter);
-  TmsView.renderTotalBalance(services.totalBalance);
+  render.renderTotalBalance(services.totalBalance);
 }
 
 const getIncomeCategories=async () => {
-  TmsView.startLoading("income_body");
+  base.startLoading("income_body");
   await services.getIncomeCategory(localStorage.getItem("id"));
-  TmsView.endLoading("income_body");
-  TmsView.renderIncomeCategories(services.incomeCategories);
+  base.endLoading("income_body");
+  render.renderIncomeCategories(services.incomeCategories);
   addEventForDeleteCategory();
   addEventForUpdateCategory();
 }
 
 const getExpenseCategories =async () => {
-  TmsView.startLoading("expense_body");
+  base.startLoading("expense_body");
   await services.getExpenseCategory(localStorage.getItem("id"));
-  TmsView.endLoading("expense_body");
-  TmsView.renderExpenseCategories(services.expenseCategories);
+  base.endLoading("expense_body");
+  render.renderExpenseCategories(services.expenseCategories);
   addEventForDeleteCategory();
   addEventForUpdateCategory();
 }
@@ -62,18 +69,18 @@ const addEventForUpdateCategory=() => {
 const setTransactionType =async () => {
   var select=document.getElementById("select_transaction_type");
   select.addEventListener("change",(event)=>{
-    TmsView.updateAddTransactionView(event.target.value);
+    addTrans.updateAddTransactionView(event.target.value);
     if(event.target.value==15) {
-      TmsView.addSelectionForCategory(services.incomeCategories);
+      addTrans.addSelectionForCategory(services.incomeCategories);
     }
     else if(event.target.value==16) {
-      TmsView.addSelectionForCategory(services.expenseCategories);
+      addTrans.addSelectionForCategory(services.expenseCategories);
     }
   });
 }
 
 const addTransaction=async () => {
-  var transaction=TmsView.addTransaction();
+  var transaction=addTrans.getNewTransactionData();
   if(transaction!=null) {
     services.totalBalance+=transaction["amount"];
     transaction["user_id"]=localStorage.getItem("id");
@@ -82,9 +89,9 @@ const addTransaction=async () => {
     } else {
       await services.addIncomeTransaction(transaction);
     }
-    TmsView.renderTransactions(services.transactions);
-    TmsView.renderTotalBalance(services.totalBalance);
-    TmsView.clearAddTransactionForm();
+    render.renderTransactions(services.transactions);
+    render.renderTotalBalance(services.totalBalance);
+    addTrans.clearAddTransactionForm();
     addEventForEditFrequent();
   }
 }
@@ -92,36 +99,36 @@ const addTransaction=async () => {
 const setCategoryType =async () => {
   var select=document.getElementById("select_category_type");
   select.addEventListener("change",(event)=>{
-    TmsView.updateAddCategoryView(event.target.value);
+    addCategories.updateAddCategoryView(event.target.value);
   });
 }
 
 const addCategory=async () => {
-  var category=await TmsView.addCategory();
+  var category=await addCategories.getNewCategoryData();
     if(category!=null) {
     if(category["type"]=="15") {
       delete category.type;
       category["user_id"]=localStorage.getItem("id")
       await services.addIncomeCategory(category);
-      TmsView.renderIncomeCategories(services.incomeCategories);
+      render.renderIncomeCategories(services.incomeCategories);
     } else if(category["type"]=="16") {
       delete category.type;
       category["user_id"]=localStorage.getItem("id")
       await services.addExpenseCategory(category);
-      TmsView.renderExpenseCategories(services.expenseCategories);
+      render.renderExpenseCategories(services.expenseCategories);
     }
     addEventForDeleteCategory();
     addEventForUpdateCategory();
-    TmsView.clearAddCategoryForm();
+    addCategories.clearAddCategoryForm();
   }
 }
 
 const updateCategory=async (event) => {
   var type=event.target.id.split("/")[0];
   var id=event.target.id.split("/")[1];
-  TmsView.addUpdateCategoryForm(id,type,services.incomeCategories,services.expenseCategories);
+  updateCategories.addUpdateCategoryForm(id,type,services.incomeCategories,services.expenseCategories);
   document.getElementById(`done_update_${type}_${id}`).addEventListener("click",async ()=>{
-      var new_data=await TmsView.getNewCategoryData(id,type);
+      var new_data=await updateCategories.getNewCategoryData(id,type);
       if(new_data) {
         if(type=="income") {
           services.incomeCategories[id]["value"]=new_data["value"];
@@ -135,7 +142,7 @@ const updateCategory=async (event) => {
           await services.updateExpenseCategory(services.expenseCategories[id]);
         }
         await getTransactions({});
-        TmsView.removeUpdateCategoryForm(id,type,new_data["value"],new_data["icon"]);
+        updateCategories.removeUpdateCategoryForm(id,type,new_data["value"],new_data["icon"]);
          addEventForDeleteCategory();
          addEventForUpdateCategory();
       }
@@ -147,18 +154,18 @@ const deleteCategory=async (event) => {
   if(id[0]=="income") {
     await services.diableCategory(parseInt(services.incomeCategories[id[1]]["id"]));
     services.incomeCategories[id[1]]=null;
-    TmsView.renderIncomeCategories(services.incomeCategories);
+    render.renderIncomeCategories(services.incomeCategories);
   } else if(id[0]=="expense") {
     await services.diableCategory(parseInt(services.expenseCategories[id[1]]["id"]));
     services.expenseCategories[id[1]]=null;
-    TmsView.renderExpenseCategories(services.expenseCategories);
+    render.renderExpenseCategories(services.expenseCategories);
   }
   addEventForDeleteCategory();
   addEventForUpdateCategory();
 }
 
 const filterTransactions=(event) => {
-  TmsView.addFilterTransactionForm(services.incomeCategories,services.expenseCategories);
+  filterTrans.addFilterTransactionForm(services.incomeCategories,services.expenseCategories);
   document.getElementById("select_filter_type").addEventListener("change",(event)=>{
     if(event.target.value!="") {
       document.getElementById("select_filter_category").disabled=true;
@@ -177,7 +184,7 @@ const filterTransactions=(event) => {
   });
   event.target.removeEventListener("click",filterTransactions);
   document.getElementById("add_filter_transaction_button").addEventListener("click",()=>{
-    var filter=TmsView.getFilterTransactions();
+    var filter=filterTrans.getFilterTransactions();
     if(filter!=null) {
       getTransactions(filter);
       getBalance(filter);
@@ -186,17 +193,17 @@ const filterTransactions=(event) => {
   document.getElementById("close_filter_transaction_button").addEventListener("click",()=>{
       getTransactions({});
       getBalance({});
-      TmsView.removeFilterTransactionForm();
+      filterTrans.removeFilterTransactionForm();
       event.target.addEventListener("click",filterTransactions);
   });
 }
 
 const editTransactionFrequent=async (event) => {
   var id=event.target.id;
-  TmsView.addEditFreuentForm(id,services.transactions[id]["monthFrequent"]?services.transactions[id]["monthFrequent"]:0);
+  editFrequent.addEditFreuentForm(id,services.transactions[id]["monthFrequent"]?services.transactions[id]["monthFrequent"]:0);
   document.getElementById(`done_${id}`).addEventListener("click",(event)=>{
-      var newValue=TmsView.getNewFrequent(id);
-      TmsView.removeEditFrequentForm(id,newValue);
+      var newValue=editFrequent.getNewFrequentData(id);
+      editFrequent.removeEditFrequentForm(id,newValue);
       services.transactions[id]["monthFrequent"]=newValue;
       services.setFrequent(services.transactions[id]["id"],newValue);
       addEventForEditFrequent();
@@ -246,10 +253,10 @@ window.addEventListener("load",() => {
       let date = hour+":"+minutes+"  "+month  + '\n'+ day  + ',' + year;
     if (event.keyCode === 13) {
       if(!event.shiftKey) {
-        var mesg=TmsView.addUserMessage(date);
+        var mesg=chatbot.addUserMessage(date);
         if(mesg) {
           document.getElementById("send_mesg").disabled=true;
-          await TmsView.addBotMessage(await ChatBot.sendMessage(mesg),date);
+          await chatbot.addBotMessage(await ChatBot.sendMessage(mesg),date);
           audio.play();
           audio.muted = false;
           document.getElementById("send_mesg").disabled=false;
