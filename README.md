@@ -36,11 +36,7 @@
 
 15-run"terminal": cd ../website
 
-16-run"terminal": npm install
-
-17-run"terminal": npm run build //make sure you kill any process use port 8081
-
-18-run"terminal": npm run run //make sure you kill any process use port 8081
+16-run"terminal": npm run run //make sure you kill any process use port 8081
 
 **now website is running ,access it by http://localhost:8081/
 

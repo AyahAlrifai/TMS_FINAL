@@ -1,16 +1,16 @@
 import TmsServices from "../models/TmsServices";
-import * as chatbot from "../views/chatbot";
-import * as ChatBot from "../models/ChatBot";
 import * as base from "../views/base";
 import * as render from "../views/render";
+import * as chatbot from "../views/chatbot";
+import * as ChatBot from "../models/ChatBot";
 import * as addTrans from "../views/addTransaction";
 import * as filterTrans from "../views/filterTransactions";
+import * as editFrequent from "../views/editFrequent";
 import * as addCategories from "../views/addCategory";
 import * as updateCategories from "../views/updateCategory";
-import * as editFrequent from "../views/editFrequent";
-
 
 const services=new TmsServices();
+
 const getTransactions=async (filter) => {
   filter["user_id"]=localStorage.getItem("id")
   base.startLoading("transaction_body");
@@ -79,21 +79,23 @@ const setTransactionType =async () => {
   });
 }
 
-const addTransaction=async () => {
-  var transaction=addTrans.getNewTransactionData();
-  if(transaction!=null) {
-    services.totalBalance+=transaction["amount"];
-    transaction["user_id"]=localStorage.getItem("id");
-    if(transaction["paymentMethod"]) {
-      await services.addExpenseTransaction(transaction);
-    } else {
-      await services.addIncomeTransaction(transaction);
+const addTransaction=() => {
+  document.getElementById("add_transaction_button").addEventListener("click",async ()=>{
+    var transaction=addTrans.getNewTransactionData();
+    if(transaction!=null) {
+      services.totalBalance+=transaction["amount"];
+      transaction["user_id"]=localStorage.getItem("id");
+      if(transaction["paymentMethod"]) {
+        await services.addExpenseTransaction(transaction);
+      } else {
+        await services.addIncomeTransaction(transaction);
+      }
+      render.renderTransactions(services.transactions);
+      render.renderTotalBalance(services.totalBalance);
+      addTrans.clearAddTransactionForm();
+      addEventForEditFrequent();
     }
-    render.renderTransactions(services.transactions);
-    render.renderTotalBalance(services.totalBalance);
-    addTrans.clearAddTransactionForm();
-    addEventForEditFrequent();
-  }
+  });
 }
 
 const setCategoryType =async () => {
@@ -103,24 +105,26 @@ const setCategoryType =async () => {
   });
 }
 
-const addCategory=async () => {
-  var category=await addCategories.getNewCategoryData();
-    if(category!=null) {
-    if(category["type"]=="15") {
-      delete category.type;
-      category["user_id"]=localStorage.getItem("id")
-      await services.addIncomeCategory(category);
-      render.renderIncomeCategories(services.incomeCategories);
-    } else if(category["type"]=="16") {
-      delete category.type;
-      category["user_id"]=localStorage.getItem("id")
-      await services.addExpenseCategory(category);
-      render.renderExpenseCategories(services.expenseCategories);
+const addCategory= () => {
+  document.getElementById("add_category_button").addEventListener("click",async ()=>{
+    var category=await addCategories.getNewCategoryData();
+      if(category!=null) {
+      if(category["type"]=="15") {
+        delete category.type;
+        category["user_id"]=localStorage.getItem("id")
+        await services.addIncomeCategory(category);
+        render.renderIncomeCategories(services.incomeCategories);
+      } else if(category["type"]=="16") {
+        delete category.type;
+        category["user_id"]=localStorage.getItem("id")
+        await services.addExpenseCategory(category);
+        render.renderExpenseCategories(services.expenseCategories);
+      }
+      addEventForDeleteCategory();
+      addEventForUpdateCategory();
+      addCategories.clearAddCategoryForm();
     }
-    addEventForDeleteCategory();
-    addEventForUpdateCategory();
-    addCategories.clearAddCategoryForm();
-  }
+  });
 }
 
 const updateCategory=async (event) => {
@@ -164,37 +168,37 @@ const deleteCategory=async (event) => {
   addEventForUpdateCategory();
 }
 
-const filterTransactions=(event) => {
-  filterTrans.addFilterTransactionForm(services.incomeCategories,services.expenseCategories);
-  document.getElementById("select_filter_type").addEventListener("change",(event)=>{
-    if(event.target.value!="") {
-      document.getElementById("select_filter_category").disabled=true;
-    } else {
-      document.getElementById("select_filter_category").disabled=false;
-
-    }
-  });
-  document.getElementById("select_filter_category").addEventListener("change",(event)=>{
-    if(event.target.value!="") {
-      document.getElementById("select_filter_type").disabled=true;
-    } else {
-      document.getElementById("select_filter_type").disabled=false;
-
-    }
-  });
-  event.target.removeEventListener("click",filterTransactions);
-  document.getElementById("add_filter_transaction_button").addEventListener("click",()=>{
-    var filter=filterTrans.getFilterTransactions();
-    if(filter!=null) {
-      getTransactions(filter);
-      getBalance(filter);
-    }
-  });
-  document.getElementById("close_filter_transaction_button").addEventListener("click",()=>{
-      getTransactions({});
-      getBalance({});
-      filterTrans.removeFilterTransactionForm();
-      event.target.addEventListener("click",filterTransactions);
+const filterTransactions=() => {
+  document.getElementById("transaction_filter").addEventListener("click",(event)=>{
+    filterTrans.addFilterTransactionForm(services.incomeCategories,services.expenseCategories);
+    document.getElementById("select_filter_type").addEventListener("change",(event)=>{
+      if(event.target.value!="") {
+        document.getElementById("select_filter_category").disabled=true;
+      } else {
+        document.getElementById("select_filter_category").disabled=false;
+      }
+    });
+    document.getElementById("select_filter_category").addEventListener("change",(event)=>{
+      if(event.target.value!="") {
+        document.getElementById("select_filter_type").disabled=true;
+      } else {
+        document.getElementById("select_filter_type").disabled=false;
+      }
+    });
+    event.target.removeEventListener("click",filterTransactions);
+    document.getElementById("add_filter_transaction_button").addEventListener("click",()=>{
+      var filter=filterTrans.getFilterTransactions();
+      if(filter!=null) {
+        getTransactions(filter);
+        getBalance(filter);
+      }
+    });
+    document.getElementById("close_filter_transaction_button").addEventListener("click",()=>{
+        getTransactions({});
+        getBalance({});
+        filterTrans.removeFilterTransactionForm();
+        event.target.addEventListener("click",filterTransactions);
+    });
   });
 }
 
@@ -210,37 +214,22 @@ const editTransactionFrequent=async (event) => {
     });
 }
 
-const startEndChat=()=>{
-  var notification=document.getElementById("notific");
-  if(notification) {
-    notification.parentNode.removeChild(notification);
-  }
-  var talkbubble=document.getElementById("talkbubble");
-  if(talkbubble.style.display=="block"){
-    talkbubble.setAttribute("style","display:none");
-  } else {
-    talkbubble.setAttribute("style","display:block");
-  }
+const toggleChat=()=>{
+  document.getElementById("chat").addEventListener("click",()=>{
+    var notification=document.getElementById("notific");
+    if(notification) {
+      notification.parentNode.removeChild(notification);
+    }
+    var talkbubble=document.getElementById("talkbubble");
+    if(talkbubble.style.display=="block"){
+      talkbubble.setAttribute("style","display:none");
+    } else {
+      talkbubble.setAttribute("style","display:block");
+    }
+  });
 }
 
-window.addEventListener("load",() => {
-  var audio = new Audio("img/beyond-doubt-2.ogg");
-  audio.muted =false;
-  getTransactions({});
-  getBalance({});
-  getIncomeCategories();
-  getExpenseCategories();
-  setTransactionType();
-  audio.play();
-  document.getElementById("add_transaction_button").addEventListener("click",(event)=>{
-    addTransaction();
-  });
-  setCategoryType();
-  document.getElementById("add_category_button").addEventListener("click",(event)=>{
-  addCategory();
-  });
-  document.getElementById("transaction_filter").addEventListener("click",filterTransactions);
-  document.getElementById("chat").addEventListener("click",startEndChat);
+const sendMessages=()=>{
   document.getElementById("send_mesg").addEventListener("keyup",async (event) => {
     const monthNames = ["January", "February", "March", "April", "May", "June",
           "July", "August", "September", "October", "November", "December"];
@@ -257,13 +246,17 @@ window.addEventListener("load",() => {
         if(mesg) {
           document.getElementById("send_mesg").disabled=true;
           await chatbot.addBotMessage(await ChatBot.sendMessage(mesg),date);
+          var audio = new Audio("img/beyond-doubt-2.ogg");
+          audio.muted =false;
           audio.play();
-          audio.muted = false;
           document.getElementById("send_mesg").disabled=false;
         }
       }
     }
   });
+}
+
+const logout=()=>{
   document.getElementById("logout").addEventListener("click",()=>{
     localStorage.setItem("id",null);
     localStorage.setItem("name",null);
@@ -275,4 +268,24 @@ window.addEventListener("load",() => {
     localStorage.setItem("new_photo",null);
     window.open(`http://localhost:8081`,"_self");
   })
+}
+
+window.addEventListener("load",() => {
+  var audio = new Audio("img/beyond-doubt-2.ogg");
+  audio.muted =false;
+  audio.play();
+  /////////////////////////////
+  getTransactions({});
+  getBalance({});
+  getIncomeCategories();
+  getExpenseCategories();
+  ////////////////////////////
+  setTransactionType();
+  addTransaction();
+  setCategoryType();
+  addCategory();
+  filterTransactions();
+  toggleChat();
+  sendMessages();
+  logout();
 });
