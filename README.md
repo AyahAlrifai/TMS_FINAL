@@ -1,26 +1,24 @@
 1-install mySql.
 
-2-run mysql as root. 
+2-create database.
 
-3-run"mysql-root":CREATE USER 'tmsadmin2'@'localhost' IDENTIFIED BY '123412345';
+3-import this .sql file ./api/sql-scripts/database.sql in new database.
 
-4-run"mysql-root": GRANT ALL PRIVILEGES ON *.* TO 'tmsadmin2'@'localhost';
+4-open file ./api/configFile.txt.
+
+change first line with new database name
+
+change second line with username.
+
+change third line with password.
 
 5-exit mysql.
 
-6-run mysql as tmsadmin2.
+6-install JDK
 
-7-run"mysql-tmsadmin2": CREATE DATABASE TMS2;
+7-install eclipse.
 
-8-open terminal and go to project directory.
-
-9-run"terminal":mysql -h localhost -u tmsadmin2 -p123412345 TMS2 < ./api/sql-scripts/database.sql
-
-10-install JDK
-
-11-install eclipse.
-
-12-open your eclipse and goto help:
+8-open your eclipse and goto help:
 	a-select "eclipse MarketPLace":
 		>install: spring Tools 3(Standalon editor)
 		>install: spring Tools 3 Add-on spring Tool 4 3.9.13.CI
@@ -28,15 +26,15 @@
 	b-select "Install new Software":
 		>install: maven
 
-13-run api: click right on project.....run as....maven build....goals=spring-boot:run  //make sure you kill any process use port 8080
+9-run api: click right on project.....run as....maven build....goals=spring-boot:run  //make sure you kill any process use port 8080
 
 ***now api is running, access it by http://localhost:8080/
 
-14-install npm
+10-install npm
 
-15-run"terminal": cd ../website
+11-run"terminal": cd ./website
 
-16-run"terminal": npm run run //make sure you kill any process use port 8081
+12-run"terminal": npm run run //make sure you kill any process use port 8081
 
 **now website is running ,access it by http://localhost:8081/
 
