@@ -12,6 +12,9 @@ export const renderTransactions = (transactions) => {
       <img src="img/icon.png" class="rounded-circle" alt="" width="30" height="30" />
       `;
     }
+    var parts=transactions[i]["date"].split("-");
+    var date = new Date(parts[0], parts[1] - 1, parts[2]);
+    date.setDate(date.getDate()+2);
     var html=`
     <tr id="${i}">
       <td>${transactions[i]["type"]==15?"income":"expense"}</td>
@@ -20,7 +23,7 @@ export const renderTransactions = (transactions) => {
       </td>
       <td>${transactions[i]["category"]["value"]}</td>
       <td>${Math.abs(transactions[i]["amount"])+"JD"}</td>
-      <td>${transactions[i]["date"]}</td>
+      <td>${date.toISOString().substring(0, 10)}</td>
       <td>${transactions[i]["comment"]}</td>
       <td><p>${transactions[i]["paymentMethod"]?(transactions[i]["paymentMethod"]==13?"Cash":"Visa"):"..."}</p></td>
       <td id="transaction_month_frequent_${i}">${transactions[i]["monthFrequent"]?transactions[i]["monthFrequent"]:"..."}</td>

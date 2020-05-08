@@ -1,10 +1,10 @@
 import * as base from "./base";
 export const addProfileInfo=() =>{
   var image="";
-  if(localStorage.getItem("photo")!="null") {
+  if(localStorage.getItem("photo")) {
     image=`<img src="data:image/png;base64,${localStorage.getItem("photo")}" class="profile_image rounded-circle">`
   } else {
-    image=`<img src="../../img/profile.png" class="profile_image rounded-circle">`
+    image=`<img src="../img/profile.png" class="profile_image rounded-circle">`
   }
   var html=`
   <div class="profile_style">
@@ -43,7 +43,7 @@ export const startUpdateProfileInfo=()=>{
   if(localStorage.getItem("photo")!="null") {
     image=`<img id="profile_image" src="data:image/png;base64,${localStorage.getItem("photo")}" class="profile_image rounded-circle">`
   } else {
-    image=`<img id="profile_image" src="../../img/profile.png" class="profile_image rounded-circle">`
+    image=`<img id="profile_image" src="../img/profile.png" class="profile_image rounded-circle">`
   }
   var html=`
     <div style="font-family:'Dekko';text-align:center;font-size:1.5em;color:#00F97D">
