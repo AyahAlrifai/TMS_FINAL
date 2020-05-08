@@ -34,6 +34,8 @@ change third line with password.
 
 11-run"terminal": cd ./website
 
+12-eun"terminal":npm install
+
 12-run"terminal": npm run run //make sure you kill any process use port 8081
 
 **now website is running ,access it by http://localhost:8081/

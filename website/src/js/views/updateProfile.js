@@ -40,7 +40,7 @@ export const addProfileInfo=() =>{
 
 export const startUpdateProfileInfo=()=>{
   var image="";
-  if(localStorage.getItem("photo")!="null") {
+  if(localStorage.getItem("photo")) {
     image=`<img id="profile_image" src="data:image/png;base64,${localStorage.getItem("photo")}" class="profile_image rounded-circle">`
   } else {
     image=`<img id="profile_image" src="../img/profile.png" class="profile_image rounded-circle">`
