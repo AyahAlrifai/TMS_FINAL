@@ -82,7 +82,7 @@ const setTransactionType =async () => {
 const addTransaction=() => {
   document.getElementById("add_transaction_button").addEventListener("click",async ()=>{
     var transaction=addTrans.getNewTransactionData();
-    if(transaction!=null) {
+    if(transaction) {
       services.totalBalance+=transaction["amount"];
       transaction["user_id"]=localStorage.getItem("id");
       if(transaction["paymentMethod"]) {
@@ -169,36 +169,34 @@ const deleteCategory=async (event) => {
 }
 
 const filterTransactions=() => {
-  document.getElementById("transaction_filter").addEventListener("click",(event)=>{
-    filterTrans.addFilterTransactionForm(services.incomeCategories,services.expenseCategories);
-    document.getElementById("select_filter_type").addEventListener("change",(event)=>{
-      if(event.target.value!="") {
-        document.getElementById("select_filter_category").disabled=true;
-      } else {
-        document.getElementById("select_filter_category").disabled=false;
-      }
-    });
-    document.getElementById("select_filter_category").addEventListener("change",(event)=>{
-      if(event.target.value!="") {
-        document.getElementById("select_filter_type").disabled=true;
-      } else {
-        document.getElementById("select_filter_type").disabled=false;
-      }
-    });
-    event.target.removeEventListener("click",filterTransactions);
-    document.getElementById("add_filter_transaction_button").addEventListener("click",()=>{
-      var filter=filterTrans.getFilterTransactions();
-      if(filter!=null) {
-        getTransactions(filter);
-        getBalance(filter);
-      }
-    });
-    document.getElementById("close_filter_transaction_button").addEventListener("click",()=>{
-        getTransactions({});
-        getBalance({});
-        filterTrans.removeFilterTransactionForm();
-        event.target.addEventListener("click",filterTransactions);
-    });
+  document.getElementById("transaction_filter").removeEventListener("click",filterTransactions,true);
+  filterTrans.addFilterTransactionForm(services.incomeCategories,services.expenseCategories);
+  document.getElementById("select_filter_type").addEventListener("change",(event)=>{
+    if(event.target.value!="") {
+      document.getElementById("select_filter_category").disabled=true;
+    } else {
+      document.getElementById("select_filter_category").disabled=false;
+    }
+  });
+  document.getElementById("select_filter_category").addEventListener("change",(event)=>{
+    if(event.target.value!="") {
+      document.getElementById("select_filter_type").disabled=true;
+    } else {
+      document.getElementById("select_filter_type").disabled=false;
+    }
+  });
+  document.getElementById("add_filter_transaction_button").addEventListener("click",()=>{
+    var filter=filterTrans.getFilterTransactions();
+    if(filter) {
+      getTransactions(filter);
+      getBalance(filter);
+    }
+  });
+  document.getElementById("close_filter_transaction_button").addEventListener("click",()=>{
+      getTransactions({});
+      getBalance({});
+      filterTrans.removeFilterTransactionForm();
+      event.target.addEventListener("click",filterTransactions);
   });
 }
 
@@ -284,7 +282,7 @@ window.addEventListener("load",() => {
   addTransaction();
   setCategoryType();
   addCategory();
-  filterTransactions();
+  document.getElementById("transaction_filter").addEventListener("click",filterTransactions,true);;
   toggleChat();
   sendMessages();
   logout();

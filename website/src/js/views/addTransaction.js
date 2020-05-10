@@ -19,7 +19,7 @@ export const addSelectionForCategory= (categories) => {
  var html=`
  `;
  for (const category in categories) {
-   if(categories[category]!=null)
+   if(categories[category])
      html+=`
         <option value="${categories[category].id}">${categories[category].value}</option>
      `;

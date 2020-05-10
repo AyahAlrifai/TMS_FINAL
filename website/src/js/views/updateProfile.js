@@ -1,4 +1,5 @@
 import * as base from "./base";
+
 export const addProfileInfo=() =>{
   var image="";
   if(localStorage.getItem("photo")) {
