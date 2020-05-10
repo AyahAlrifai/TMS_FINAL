@@ -60,8 +60,14 @@ export const getFilterTransactions= () =>{
 
   filter["type"]=type==""?null:type;
   filter["category"]=category==""?null:category;
-  filter["from"]=from==""?null:from;
-  filter["to"]=to==""?null:to;
+  var parts=from.split("-");
+  var date = new Date(parts[0], parts[1] - 1, parts[2]);
+  date.setDate(date.getDate()+1);
+  filter["from"]=from==""?null:date.toISOString().substring(0, 10);
+  parts=to.split("-");
+  date = new Date(parts[0], parts[1] - 1, parts[2]);
+  date.setDate(date.getDate()+1);
+  filter["to"]=to==""?null:date.toISOString().substring(0, 10);
   filter["frequent"]=frequent==false?null:frequent;
   if(Date.parse(from)>Date.now() || Date.parse(to)>Date.now()) {
     base.errorMessage("filter_error","can't insert date in future")
