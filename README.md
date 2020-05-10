@@ -16,7 +16,7 @@ change third line with password.
 
 6-install JDK.
 
-7-run "terminal":
+7-run "terminal": //make sure you kill any process use port 8080
 
 cd ./api
 
